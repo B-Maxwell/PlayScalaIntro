@@ -1,9 +1,24 @@
 This project demonstrate how to create a simple CRUD application with Play.
-Additionally, we use this project to show how to deploy to Heroku...
+Additionally, this project will be an example deployment to Heroku cloud PAAS (Platform As A Service).
 
+"Download Heroku Toolbelt for.. MAC OS"
 HEROKU = https://devcenter.heroku.com/categories/scala
 
+Open terminal and cd to your project root directory.
+
+Add the following 2 lines in a new file called Procfile in the project dir. For a project named “play-scala-intro" (defined in build.sbt).
+web: target/universal/stage/bin/play-scala-intro -Dhttp.port=$PORT -Dplay.evolutions.db.default.autoApply=true -Ddb.default.driver=org.postgresql.Driver -Ddb.default.url=${DATABASE_URL}
+console: target/universal/stage/bin/play-scala-intro -main scala.tools.nsc.MainGenericRunner -usejavacp
+
+Generate a Secret hash and add it to the config file:
+$ sbt run playGenerateSecret
+and capture the string (make sure to remove any backquotes!!)
+Replace (or add) the line in application.conf like this:
+  play.crypto.secret = ${APP_SECRET}
+
 Create a Heroku account and follow the steps below. (in project dir)
+Sign up for free Heroku account: https://signup.heroku.com/dc
+Then in your project dir, run:
 $ heroku login
 $ heroku create
 
@@ -19,9 +34,6 @@ $ heroku open
 View the log output:
 $ heroku logs --tail
 
-Add the following 2 lines in a new file called Procfile in the project dir. For a project named “play-scala-intro" (defined in build.sbt) this is the command to run it on some port. And note this app is deployable to Stage (sbt stage).
-web: target/universal/stage/bin/play-scala-intro -Dhttp.port=${PORT}
-console: target/universal/stage/bin/play-scala-intro -main scala.tools.nsc.MainGenericRunner -usejavacp
-“Download Heroku Toolbelt for.. MAC OS”
-git push …
-etc. Once set up you can run many Heroku commands such as: heroku logs --tail heroku local etc.
+
+
+Once set up you can run many Heroku commands such as: heroku logs --tail heroku local etc.
